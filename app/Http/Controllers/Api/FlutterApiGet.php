@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 
 class FlutterApiGet extends Controller
 {
+
     public function index(Request $request)
     {
         $data = new FlutterApiResponse('Flutter Api Get', 'Flutter Api Description', 'API', 'active');
@@ -78,25 +79,31 @@ class FlutterApiGet extends Controller
                 'password.required' => 'Password is required.',
             ]);
 
-        if (Auth::attempt([
-            'email' => $request->email, 'password' => $request->password,
-        ]))
-        {
-            $user = Auth::user();
-            $token = $user->createToken('ApiGenerateTokenLaravel')->plainTextToken;
+        try {
 
+            if (Auth::attempt([
+                'email' => $request->email, 'password' => $request->password,
+            ])) {
+                $user = Auth::user();
+                $token = $user->createToken('ApiGenerateTokenLaravel')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'Login feito com sucesso',
+                    'token' => $token,
+                    'user' => [
+                        'id' => $user->id,
+                        'firstname' => $user->firstname,
+                        'lastname' => $user->lastname,
+                        'email' => $user->email,
+                    ],
+                ], 200);
+            }
             return response()->json([
-                'message' => 'Login feito com sucesso',
-                'token' => $token,
-//                'user' => [
-//                    $user->firstname,
-//                    $user->lastname,
-//                ],
-            ], 200);
+                'message' => 'Login ou senha incorretos.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([$e->getMessage()]);
         }
-        return response()->json([
-            'message' => 'Login ou senha incorretos.',
-        ]);
     }
 
 }

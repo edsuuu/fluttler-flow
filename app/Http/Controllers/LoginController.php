@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
-    public function auth(Request $request): \Illuminate\Http\RedirectResponse
+    public function auth(Request $request)
     {
+        if (Auth::check()) {
+            return redirect('/admin/dashboard');
+        }
 
         $credentials = $request->validate(
             [
@@ -21,7 +24,7 @@ class LoginController extends Controller
             ]
         );
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->remember)) {
             // dd($credentials);
 
             $request->session()->regenerate();

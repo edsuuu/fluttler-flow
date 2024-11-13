@@ -26,5 +26,4 @@ Route::get('/create', [LoginController::class, 'create'])->name('login.create');
 
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
-
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard')->middleware('auth');

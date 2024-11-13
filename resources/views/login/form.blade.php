@@ -15,6 +15,6 @@
         {{ $mensagem }}
     @endif
     <br>
-
+    <input type="checkbox" name="remember"> Lembrar me
     <button type="submit">Login</button>
 </form>
